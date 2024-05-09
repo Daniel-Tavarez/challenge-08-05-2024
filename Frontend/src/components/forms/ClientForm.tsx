@@ -1,18 +1,28 @@
 // src/components/ClientForm.js
 import React, { FC, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCreateClient } from "../../hooks/client/useCreateClient";
+import { useUpdateClient } from "../../hooks/client/useUpdateClient";
 import { Client } from "../../models/client.model";
 
 interface Props {
   model: Client | undefined;
+  onSuccess: () => void;
 }
 
-const ClientForm: FC<Props> = ({ model }) => {
+const ClientForm: FC<Props> = ({ model, onSuccess }) => {
+  const { companyId } = useParams<{ companyId: string }>();
+  const createClient = useCreateClient();
+  const updateClient = useUpdateClient();
+
   const [formData, setFormData] = useState({
     username: model?.username ?? "",
     email: model?.email ?? "",
     first_name: model?.first_name ?? "",
     last_name: model?.last_name ?? "",
     phone: model?.phone ?? "",
+    company: Number(companyId),
+    id: model?.id ?? "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,12 +33,26 @@ const ClientForm: FC<Props> = ({ model }) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (model) {
-      console.log(formData);
+      await updateClient
+        .mutateAsync({ id: String(formData.id), data: formData })
+        .then(() => {
+          onSuccess();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     } else {
-      console.log(formData);
+      await createClient
+        .mutateAsync(formData)
+        .then(() => {
+          onSuccess();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     }
   };
 
@@ -69,6 +93,7 @@ const ClientForm: FC<Props> = ({ model }) => {
         value={formData.phone}
         onChange={handleChange}
         placeholder="Phone"
+        maxLength={10}
       />
       <button className="button" type="submit">
         {model ? "Edit client" : "Create Client"}

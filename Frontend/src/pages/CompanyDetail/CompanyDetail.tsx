@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CardComponent } from "../../components/CardComponent";
 import ClientForm from "../../components/forms/ClientForm";
+import { useDeleteClient } from "../../hooks/client/useDeleteClient";
 import { useClientsByCompany } from "../../queries/useClients";
 import { useGetCompanyById } from "../../queries/useCompanies";
 
 const CompanyDetail = () => {
   const { companyId } = useParams<{ companyId: string }>();
-  const { data: clientsByCompany } = useClientsByCompany(companyId!);
+  const { data: clientsByCompany, refetch } = useClientsByCompany(companyId!);
   const { data: company } = useGetCompanyById(companyId!);
   const [editId, setEditId] = useState<string>("");
   const navigate = useNavigate();
@@ -15,6 +16,18 @@ const CompanyDetail = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  const onSuccess = async () => {
+    await refetch();
+    setEditId("");
+  };
+
+  const deleteClient = useDeleteClient();
+  const deleteFc = async (id: string) => {
+    await deleteClient.mutateAsync(id).then(async () => {
+      await refetch();
+    })
+  }
 
   return (
     <div className="home-page">
@@ -27,17 +40,19 @@ const CompanyDetail = () => {
           Go Back
         </button>
         <h1>Clients of {company?.data.name}</h1>
-        <button className="button" onClick={() => setEditId('create')}>Create Client</button>
+        <button className="button" onClick={() => setEditId("create")}>
+          Create Client
+        </button>
       </div>
       {editId ? (
         <ClientForm
-          model={clientsByCompany?.data.find(
-            (x) => x.id == Number(editId)
-          )}></ClientForm>
+          model={clientsByCompany?.data.find((x) => x.id == Number(editId))}
+          onSuccess={onSuccess}></ClientForm>
       ) : (
         <div className="list">
           {clientsByCompany?.data.map((client) => (
             <CardComponent
+            deleteFc={deleteFc}
               title={`${client.first_name} ${client.last_name}`}
               description={client.email}
               detailRoute="client"

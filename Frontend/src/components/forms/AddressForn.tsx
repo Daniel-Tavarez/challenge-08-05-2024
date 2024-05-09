@@ -1,18 +1,28 @@
 // src/components/AddressForm.js
 import React, { FC, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCreateAddress } from "../../hooks/address/useCreateAddress";
+import { useUpdateAddress } from "../../hooks/address/useUpdateAddress";
 import Address from "../../models/address.model";
 
 interface Props {
   model: Address | undefined;
+  onSuccess: () => void;
 }
 
-const AddressForm: FC<Props> = ({ model }) => {
+const AddressForm: FC<Props> = ({ model, onSuccess }) => {
+  const { clientId } = useParams<{ clientId: string }>();
+  const createAddress = useCreateAddress();
+  const updateAddress = useUpdateAddress();
+
   const [formData, setFormData] = useState({
     street: model?.state ?? "",
     city: model?.city ?? "",
     state: model?.state ?? "",
     postal_code: model?.postal_code ?? "",
     country: model?.country ?? "",
+    client: clientId,
+    id: model?.id ?? ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,12 +33,27 @@ const AddressForm: FC<Props> = ({ model }) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (model) {
-      console.log(formData);
+      
+      await updateAddress
+        .mutateAsync({id: String(formData.id), data: formData})
+        .then(() => {
+          onSuccess();
+        })
+        .catch((error) => {
+          alert(error.response.data as string);
+        });
     } else {
-      console.log(formData);
+      await createAddress
+        .mutateAsync(formData)
+        .then(() => {
+          onSuccess();
+        })
+        .catch((error) => {
+          alert(error.response.data as string);
+        });
     }
   };
 

@@ -10,7 +10,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    h1{
+    h1 {
       white-space: nowrap;
     }
     .button {
@@ -63,6 +63,11 @@ body {
     cursor: pointer;
     border: none;
     background-color: transparent;
+  }
+  .delete {
+    @extend .edit;
+    left: 20px;
+    right: auto;
   }
   .title {
   }

@@ -1,6 +1,6 @@
 export default interface Address {
   id: number;
-  client_id: number;
+  client_id?: number;
   street: string;
   city: string;
   state: string;

@@ -2,11 +2,24 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CardComponent } from "../components/CardComponent";
 import CompanyForm from "../components/forms/CompanyForm";
+import { useDeleteCompany } from "../hooks/company/useDeleteCompany";
 import { useCompanies } from "../queries/useCompanies";
 
 const HomePage = () => {
-  const { data: companies } = useCompanies();
+  const { data: companies, refetch } = useCompanies();
   const [editId, setEditId] = useState<string>("");
+  const deleteCompany = useDeleteCompany();
+
+  const onSuccess = async () => {
+    await refetch();
+    setEditId("");
+  };
+
+  const deleteFc = async (id: string) => {
+    await deleteCompany.mutateAsync(id).then(async () => {
+      await refetch();
+    })
+  }
 
   return (
     <div className="home-page">
@@ -23,14 +36,14 @@ const HomePage = () => {
       </div>
       {editId ? (
         <CompanyForm
-          model={companies?.data.find(
-            (x) => x.id == Number(editId)
-          )}></CompanyForm>
+          model={companies?.data.find((x) => x.id == Number(editId))}
+          onSuccess={onSuccess}></CompanyForm>
       ) : (
         <div className="list">
           {companies?.data.map((company) => (
             <CardComponent
               editId={setEditId}
+              deleteFc={deleteFc}
               key={company.id}
               title={company.name}
               description={company.industry}

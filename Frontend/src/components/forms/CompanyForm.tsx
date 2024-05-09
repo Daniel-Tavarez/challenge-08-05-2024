@@ -1,18 +1,25 @@
 // src/components/CompanyForm.js
 import React, { FC, useState } from "react";
+import { useCreateCompany } from "../../hooks/company/useCreateCompany";
+import { useUpdateCompany } from "../../hooks/company/useUpdateCompany";
 import { Company } from "../../models/company.model";
 
 interface Props {
   model: Company | undefined;
+  onSuccess: () => void;
 }
 
-const CompanyForm: FC<Props> = ({ model }) => {
+const CompanyForm: FC<Props> = ({ model, onSuccess }) => {
+  const createCompany = useCreateCompany();
+  const updateCompany = useUpdateCompany();
+
   const [formData, setFormData] = useState({
     name: model?.name ?? "",
     industry: model?.industry ?? "",
     phone_number: model?.phone_number ?? "",
     email: model?.email ?? "",
     website: model?.website ?? "",
+    id: model?.id ?? ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,12 +30,26 @@ const CompanyForm: FC<Props> = ({ model }) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (model) {
-      console.log(formData);
+      await updateCompany
+        .mutateAsync({id: String(formData.id), data: formData})
+        .then(() => {
+          onSuccess();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     } else {
-      console.log(formData);
+      await createCompany
+        .mutateAsync(formData)
+        .then(() => {
+          onSuccess();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     }
   };
 
@@ -71,7 +92,9 @@ const CompanyForm: FC<Props> = ({ model }) => {
         onChange={handleChange}
         placeholder="Website URL"
       />
-      <button className="button" type="submit">{model ? "Edit company" : "Create Company"}</button>
+      <button className="button" type="submit">
+        {model ? "Edit company" : "Create Company"}
+      </button>
     </form>
   );
 };

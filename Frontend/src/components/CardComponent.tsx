@@ -1,7 +1,7 @@
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from "@mui/icons-material/Edit";
 import { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
-
 interface Props {
   title: string;
   description: string;
@@ -9,6 +9,7 @@ interface Props {
   detailRoute?: string;
   listOther: () => ReactNode;
   editId: React.Dispatch<React.SetStateAction<string>>;
+  deleteFc: (id: string) => void;
 }
 
 export const CardComponent: FC<Props> = ({
@@ -18,9 +19,13 @@ export const CardComponent: FC<Props> = ({
   detailRoute,
   listOther,
   editId,
+  deleteFc
 }) => {
   return (
     <div className="card-component">
+      <button className="delete" onClick={() => deleteFc(id)}>
+        <DeleteIcon></DeleteIcon>
+      </button>
       <button className="edit" onClick={() => editId(id)}>
         <EditIcon></EditIcon>
       </button>
