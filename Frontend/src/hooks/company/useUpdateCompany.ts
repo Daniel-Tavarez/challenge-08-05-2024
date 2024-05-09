@@ -1,4 +1,3 @@
-// In src/hooks/useUpdateCompany.ts
 import { useMutation } from "react-query";
 import { Company } from "../../models/company.model";
 import apiService from "../../services/apiService";

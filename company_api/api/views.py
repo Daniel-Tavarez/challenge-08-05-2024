@@ -10,7 +10,6 @@ class CompanyViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def clients(self, request, pk=None):
-        """Endpoint to retrieve clients associated with a company."""
         clients = Client.objects.filter(company_id=pk)
         serializer = ClientSerializer(clients, many=True)
         return Response(serializer.data)
@@ -27,7 +26,6 @@ class ClientViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def addresses(self, request, pk=None):
-        """Endpoint to retrieve addresses associated with a client."""
         addresses = Address.objects.filter(client_id=pk)
         serializer = AddressSerializer(addresses, many=True)
         return Response(serializer.data)

@@ -1,4 +1,3 @@
-// In src/hooks/useDeleteCompany.ts
 import { useMutation } from 'react-query';
 import { deleteAddress } from '../../services/addressService';
 

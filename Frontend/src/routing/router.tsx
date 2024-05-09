@@ -1,4 +1,3 @@
-// src/routes/AppRoutes.tsx
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ClientDetail from '../pages/ClientDetail/ClientDetail';

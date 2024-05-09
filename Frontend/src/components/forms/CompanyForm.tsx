@@ -1,4 +1,3 @@
-// src/components/CompanyForm.js
 import React, { FC, useState } from "react";
 import { useCreateCompany } from "../../hooks/company/useCreateCompany";
 import { useUpdateCompany } from "../../hooks/company/useUpdateCompany";

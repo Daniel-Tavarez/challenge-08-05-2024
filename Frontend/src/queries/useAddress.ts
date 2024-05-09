@@ -1,4 +1,3 @@
-// src/queries/useAddresses.ts
 import { useQuery } from 'react-query';
 import { getAddressesByClientId, getAllAddresses } from '../services/addressService';
 

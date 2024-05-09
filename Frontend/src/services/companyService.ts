@@ -1,4 +1,3 @@
-// src/services/companyService.ts
 import { Company } from "../models/company.model";
 import apiService from "./apiService";
 

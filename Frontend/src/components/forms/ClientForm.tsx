@@ -1,4 +1,3 @@
-// src/components/ClientForm.js
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCreateClient } from "../../hooks/client/useCreateClient";
