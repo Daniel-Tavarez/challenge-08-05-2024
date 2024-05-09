@@ -1,4 +1,4 @@
-export interface Address {
+export default interface Address {
   id: number;
   client_id: number;
   street: string;

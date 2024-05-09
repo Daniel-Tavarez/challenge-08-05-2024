@@ -1,5 +1,4 @@
-// src/services/addressService.ts
-import { Address } from "../models/Address.model";
+import Address from "../models/address.model";
 import apiService from "./apiService";
 
 const endpoint = "addresses/";

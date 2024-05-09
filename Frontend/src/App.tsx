@@ -1,14 +1,17 @@
 import { QueryClient, QueryClientProvider } from "react-query";
+import { BrowserRouter as Router } from "react-router-dom"; // Use BrowserRouter
 import "./App.scss";
-import HomePage from "./pages/HomePage";
+import AppRoutes from "./routing/router";
 
 function App() {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <HomePage/>
-    </QueryClientProvider>
+    <Router>
+      <QueryClientProvider client={queryClient}>
+        <AppRoutes />
+      </QueryClientProvider>
+    </Router>
   );
 }
 

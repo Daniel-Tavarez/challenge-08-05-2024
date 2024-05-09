@@ -1,6 +1,5 @@
-// src/queries/useClients.ts
 import { useQuery } from 'react-query';
-import { getAllClients, getClientsByCompany } from '../services/clientService';
+import { getAddressesByClient, getAllClients, getClientById, getClientsByCompany } from '../services/clientService';
 
 export const useClients = () => {
     return useQuery('clients', getAllClients);
@@ -8,6 +7,18 @@ export const useClients = () => {
 
 export const useClientsByCompany = (companyId: string) => {
     return useQuery(['clients', companyId], () => getClientsByCompany(companyId), {
-        enabled: !!companyId  // Ensure companyId is not null or empty
+        enabled: !!companyId
+    });
+};
+
+export const useAddressByClient = (clientId: string) => {
+    return useQuery(['clients', clientId], () => getAddressesByClient(clientId), {
+        enabled: !!clientId
+    });
+};
+
+export const useClientById = (clientId: string) => {
+    return useQuery(['client', clientId], () => getClientById(clientId), {
+        enabled: !!clientId
     });
 };

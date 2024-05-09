@@ -1,4 +1,3 @@
-// src/services/apiService.ts
 import axios from 'axios';
 
 const apiService = axios.create({
